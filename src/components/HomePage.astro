@@ -6,6 +6,7 @@ import ProjectsSection from './ProjectsSection.astro';
 import RoundIcon, { type IconName } from './RoundIcon.astro';
 import Wave from './Wave.astro';
 import { telegramUrl, useTranslations, type Locale } from '../i18n';
+import { personLd } from '../lib/seo';
 
 interface Props {
   locale: Locale;
@@ -13,6 +14,11 @@ interface Props {
 
 const { locale } = Astro.props;
 const t = useTranslations(locale);
+const jsonLd = {
+  '@context': 'https://schema.org',
+  ...personLd(locale, Astro.site),
+  description: t('site.description'),
+};
 
 const skills = [
   { icon: 'ai', title: t('skills.ai'), text: t('skills.ai.text') },
@@ -25,7 +31,7 @@ const help = [
 ] satisfies { icon: IconName; title: string; text: string }[];
 ---
 
-<Base locale={locale}>
+<Base locale={locale} jsonLd={jsonLd}>
   <div
     class="pointer-events-none absolute inset-x-0 top-0 h-[1100px] overflow-hidden"
     aria-hidden="true"

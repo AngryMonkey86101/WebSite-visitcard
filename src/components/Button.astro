@@ -11,7 +11,7 @@ const { variant = 'primary', class: className, ...attrs } = Astro.props;
 {variant === 'primary' ? (
   <a
     class:list={[
-      'inline-flex min-w-[250px] items-center justify-center rounded-[40px] bg-accent px-10 py-[22px] font-display text-button font-bold text-white uppercase transition hover:shadow-hover hover:brightness-110',
+      'inline-flex min-w-[250px] items-center justify-center rounded-[40px] bg-accent px-10 py-[22px] font-display text-button font-bold text-bg uppercase transition hover:shadow-hover hover:brightness-110',
       className,
     ]}
     {...attrs}

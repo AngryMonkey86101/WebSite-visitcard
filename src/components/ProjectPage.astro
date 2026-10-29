@@ -7,6 +7,7 @@ import ProjectImage from './ProjectImage.astro';
 import Tags from './Tags.astro';
 import { localizedUrl, useTranslations, type Locale } from '../i18n';
 import { getProjects, type Project } from '../lib/projects';
+import { personLd } from '../lib/seo';
 
 interface Props {
   locale: Locale;
@@ -24,9 +25,27 @@ const { title, summary } = project.entry.data;
 // Пока скриншотов нет, показываем две заглушки.
 const screenshots = project.screenshots.length > 0 ? project.screenshots : [undefined, undefined];
 const projectsHref = `${localizedUrl(locale)}#projects`;
+const { demo, telegram, download } = project.links;
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CreativeWork',
+  name: title,
+  description: summary,
+  inLanguage: locale,
+  keywords: project.tags.join(', '),
+  url: new URL(Astro.url.pathname, Astro.site).href,
+  sameAs: [demo, telegram, download].filter(Boolean),
+  author: personLd(locale, Astro.site),
+};
 ---
 
-<Base locale={locale} title={title} description={summary}>
+<Base
+  locale={locale}
+  title={title}
+  description={summary}
+  ogImage={`${locale}/projects/${slug}`}
+  jsonLd={jsonLd}
+>
   <article class="relative z-10">
     <div class="container-site flex flex-col gap-10 py-10 md:gap-14 md:py-16">
       <a href={projectsHref} class="font-display text-sm text-accent hover:underline">

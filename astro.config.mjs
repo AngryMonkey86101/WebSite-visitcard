@@ -1,5 +1,6 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
 // SITE_URL и BASE_PATH задаёт workflow деплоя: для GitHub Pages сайт живёт
@@ -11,6 +12,7 @@ export default defineConfig({
   site,
   base,
   trailingSlash: 'always',
+
   i18n: {
     defaultLocale: 'ru',
     locales: ['ru', 'en'],
@@ -18,7 +20,14 @@ export default defineConfig({
       prefixDefaultLocale: false,
     },
   },
+
   vite: {
     plugins: [tailwindcss()],
   },
+
+  integrations: [
+    sitemap({
+      i18n: { defaultLocale: 'ru', locales: { ru: 'ru-RU', en: 'en-US' } },
+    }),
+  ],
 });

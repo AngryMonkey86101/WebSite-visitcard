@@ -11,8 +11,8 @@
   --color-wave-top: #0088f0;
   --color-wave-mid: #00479e;
   --color-wave-deep: #000141;
-  --color-card: #ffffff;
-  --color-card-text: #000000;
+  --color-card: #0a1428;
+  --color-card-text: #ffffff;
 
   --font-display: 'Inter Variable', 'Inter', system-ui, sans-serif;
   --font-body: 'Source Sans 3', 'Source Sans Pro', system-ui, sans-serif;
@@ -50,6 +50,16 @@
   :focus-visible {
     outline: 2px solid var(--color-accent);
     outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    ::before,
+    ::after {
+      scroll-behavior: auto !important;
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+    }
   }
 }
 

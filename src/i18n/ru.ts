@@ -8,6 +8,7 @@ export const ru = {
   'nav.contacts': 'Контакты',
   'nav.menu': 'Меню',
   'lang.switch': 'Switch to English',
+  'a11y.skip': 'Перейти к содержимому',
   'hero.name': 'Вадим Измайлов',
   'hero.role': 'Разработчик',
   'hero.lead': 'Делаю AI-сервисы, Telegram-ботов и сайты — от идеи до запуска.',
