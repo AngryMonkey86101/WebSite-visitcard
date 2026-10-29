@@ -30,7 +30,9 @@ src/
   components/   кнопки, шапка, футер, волны, главная страница
   i18n/         словари интерфейса ru.ts и en.ts
   layouts/      общий шаблон страницы (meta, hreflang, шрифты)
-  pages/        /, /en/, 404
+  content/      проекты: projects/<slug>/ru.md и en.md
+  lib/          загрузка проектов с учётом языка
+  pages/        /, /en/, /projects/<slug>/, /en/projects/<slug>/, 404
   styles/       global.css с токенами из design.md
 public/         favicon и прочая статика
 deploy/         пример конфига nginx для своего VPS
@@ -38,6 +40,36 @@ deploy/         пример конфига nginx для своего VPS
 
 Русский — язык по умолчанию (`/`), английский — `/en/`. Новые тексты интерфейса добавляются
 в `src/i18n/ru.ts`, а TypeScript не даст собрать сайт, пока их нет в `en.ts`.
+
+## Как добавить проект
+
+1. Создайте папку `src/content/projects/<slug>/` (slug — латиницей, станет адресом `/projects/<slug>/`).
+2. В ней `ru.md` — все поля и текст на русском:
+
+   ```md
+   ---
+   title: Название
+   summary: Одно-два предложения для карточки (до 200 символов).
+   order: 4                     # порядок на главной
+   tags: [AI, WebSites]
+   stack: [Python, FastAPI]
+   links:
+     demo: https://...          # кнопка «Открыть»
+     telegram: https://t.me/... # кнопка «Открыть в Telegram»
+     download: https://...      # кнопка «Скачать»
+   cover: ./cover.png           # обложка 16:9, необязательно
+   screenshots: [./screen-1.png, ./screen-2.png]
+   ---
+
+   ## Задача
+   ...
+   ```
+
+3. Рядом `en.md` — только `title`, `summary` и текст по-английски. Если его нет, английская
+   страница покажет русский текст с пометкой.
+4. Картинки кладите в ту же папку. Пока `cover` и `screenshots` не заданы, вместо них рисуются заглушки.
+
+Ссылка `links.repo` в схеме есть, но кнопка «Код» пока не показывается.
 
 ## Деплой
 

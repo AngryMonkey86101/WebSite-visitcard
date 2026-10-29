@@ -1,0 +1,97 @@
+---
+import { render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import ProjectActions from './ProjectActions.astro';
+import ProjectImage from './ProjectImage.astro';
+import Tags from './Tags.astro';
+import { localizedUrl, useTranslations, type Locale } from '../i18n';
+import { getProjects, type Project } from '../lib/projects';
+
+interface Props {
+  locale: Locale;
+  slug: string;
+}
+
+const { locale, slug } = Astro.props;
+const t = useTranslations(locale);
+const projects = await getProjects(locale);
+const index = projects.findIndex((p) => p.slug === slug);
+const project = projects[index] as Project;
+const next = projects.length > 1 ? projects[(index + 1) % projects.length] : undefined;
+const { Content } = await render(project.entry);
+const { title, summary } = project.entry.data;
+// Пока скриншотов нет, показываем две заглушки.
+const screenshots = project.screenshots.length > 0 ? project.screenshots : [undefined, undefined];
+const projectsHref = `${localizedUrl(locale)}#projects`;
+---
+
+<Base locale={locale} title={title} description={summary}>
+  <article class="relative z-10">
+    <div class="container-site flex flex-col gap-10 py-10 md:gap-14 md:py-16">
+      <a href={projectsHref} class="font-display text-sm text-accent hover:underline">
+        ← {t('project.back')}
+      </a>
+
+      <header class="flex flex-col gap-6">
+        <h1 class="font-display text-4xl font-bold md:text-5xl">{title}</h1>
+        <Tags tags={project.tags} />
+        <p class="max-w-3xl text-lg md:text-lead">{summary}</p>
+      </header>
+
+      <ProjectImage image={project.cover} alt={title} label={title} eager />
+
+      <ProjectActions project={project} locale={locale} />
+
+      {!project.translated && (
+        <p class="rounded-xl border border-accent/40 px-5 py-3 text-sm text-white/70">
+          {t('project.notTranslated')}
+        </p>
+      )}
+
+      <div class="grid gap-12 md:grid-cols-[1fr_280px] md:gap-16">
+        <div class="text-body font-semibold [&_a]:text-accent [&_a]:underline [&_code]:rounded [&_code]:bg-white/10 [&_code]:px-1.5 [&_h2]:mt-10 [&_h2]:mb-4 [&_h2]:font-display [&_h2]:text-2xl [&_h2]:font-bold [&_h2:first-child]:mt-0 [&_li]:mb-2 [&_li]:ml-5 [&_li]:list-disc [&_p]:mb-4">
+          <Content />
+        </div>
+        {project.stack.length > 0 && (
+          <aside class="flex flex-col gap-4">
+            <h2 class="font-display text-xl font-bold">{t('project.stack')}</h2>
+            <ul class="flex flex-col gap-2 text-body">
+              {project.stack.map((item) => (
+                <li class="border-b border-white/10 pb-2">{item}</li>
+              ))}
+            </ul>
+          </aside>
+        )}
+      </div>
+
+      <section class="flex flex-col gap-8">
+        <h2 class="font-display text-2xl font-bold md:text-h2">{t('project.screenshots')}</h2>
+        <div class="grid gap-6 md:grid-cols-2">
+          {screenshots.map((shot, i) =>
+            shot ? (
+              <a href={shot.src} target="_blank" rel="noopener" class="block">
+                <ProjectImage image={shot} alt={`${title} — ${i + 1}`} label={title} />
+              </a>
+            ) : (
+              <ProjectImage label={title} alt="" caption={t('project.screenshotSoon')} />
+            ),
+          )}
+        </div>
+      </section>
+
+      <nav class="flex flex-wrap justify-between gap-6 border-t border-white/10 pt-8 font-display">
+        <a href={projectsHref} class="text-accent hover:underline">
+          ← {t('project.back')}
+        </a>
+        {next && (
+          <a
+            href={localizedUrl(locale, `projects/${next.slug}/`)}
+            class="text-accent hover:underline"
+          >
+            {t('project.next')}: {next.entry.data.title} →
+          </a>
+        )}
+      </nav>
+    </div>
+  </article>
+</Base>

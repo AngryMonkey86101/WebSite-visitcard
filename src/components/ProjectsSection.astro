@@ -1,0 +1,53 @@
+---
+import ProjectActions from './ProjectActions.astro';
+import ProjectImage from './ProjectImage.astro';
+import Tags from './Tags.astro';
+import { localizedUrl, useTranslations, type Locale } from '../i18n';
+import { getProjects } from '../lib/projects';
+
+// Блок проектов на главной: зигзаг как секция «ОПИСАНИЕ» в макете.
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const projects = await getProjects(locale);
+---
+
+<section id="projects" class="relative z-10 scroll-mt-8 py-24 md:py-[120px]">
+  <div class="container-site">
+    <h2 class="text-center text-2xl font-bold md:text-h2">{t('projects.title')}</h2>
+    <ol class="mt-16 flex flex-col gap-24 md:mt-24 md:gap-[160px]">
+      {projects.map((project, i) => {
+        const href = localizedUrl(locale, `projects/${project.slug}/`);
+        return (
+          <li class="grid items-center gap-8 md:grid-cols-2 md:gap-[110px]">
+            <a
+              href={href}
+              class:list={['block transition hover:-translate-y-1', i % 2 === 1 && 'md:order-2']}
+              tabindex="-1"
+              aria-hidden="true"
+            >
+              <ProjectImage
+                image={project.cover}
+                alt={project.entry.data.title}
+                label={project.entry.data.title}
+              />
+            </a>
+            <div class="flex flex-col gap-6">
+              <h3 class="text-2xl font-bold md:text-h2">
+                <a href={href} class="hover:text-accent">
+                  {project.entry.data.title}
+                </a>
+              </h3>
+              <Tags tags={project.tags} />
+              <p class="text-body font-semibold">{project.entry.data.summary}</p>
+              <ProjectActions project={project} locale={locale} moreHref={href} />
+            </div>
+          </li>
+        );
+      })}
+    </ol>
+  </div>
+</section>
