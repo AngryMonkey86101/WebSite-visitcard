@@ -14,8 +14,20 @@ export const ru = {
   'hero.projects': 'Проекты',
   'hero.contact': 'Связаться',
   'skills.title': 'Навыки',
+  'skills.ai': 'AI',
+  'skills.ai.text': 'Сервисы и ассистенты на нейросетях: от прототипа до рабочего инструмента.',
+  'skills.bots': 'Telegram-bots',
+  'skills.bots.text': 'Боты и Mini Apps: заявки, списки, уведомления и оплата прямо в Telegram.',
+  'skills.web': 'WebSites',
+  'skills.web.text': 'Сайты, лендинги и PWA, которые быстро грузятся и удобны на телефоне.',
   'projects.title': 'Проекты',
   'help.title': 'Чем могу помочь',
+  'help.turnkey': 'Разработка под ключ',
+  'help.turnkey.text':
+    'Беру идею, предлагаю решение, делаю и запускаю. Вы получаете готовый продукт.',
+  'help.support': 'Доработка и поддержка',
+  'help.support.text':
+    'Разбираюсь в существующем проекте, исправляю ошибки и добавляю новые функции.',
   'contacts.title': 'Есть идея или задача?',
   'contacts.text': 'Напишите мне в Telegram — отвечу и обсудим.',
   'contacts.telegram': 'Написать в Telegram',
@@ -29,7 +41,6 @@ export const ru = {
   'project.back': 'Все проекты',
   'project.next': 'Следующий проект',
   'project.notTranslated': 'Описание этого проекта пока только на русском.',
-  'placeholder.soon': 'Раздел появится на следующих этапах.',
   'notFound.title': 'Страница не найдена',
   'notFound.back': 'На главную',
 } as const;

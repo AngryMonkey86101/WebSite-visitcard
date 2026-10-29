@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Button from './Button.astro';
 import ProjectsSection from './ProjectsSection.astro';
+import RoundIcon, { type IconName } from './RoundIcon.astro';
 import Wave from './Wave.astro';
 import { telegramUrl, useTranslations, type Locale } from '../i18n';
 
@@ -12,9 +13,15 @@ interface Props {
 const { locale } = Astro.props;
 const t = useTranslations(locale);
 
-// Разделы-заглушки: наполним на следующих этапах плана.
-const skills = { id: 'skills', title: t('skills.title') };
-const help = { id: 'help', title: t('help.title') };
+const skills = [
+  { icon: 'ai', title: t('skills.ai'), text: t('skills.ai.text') },
+  { icon: 'telegram', title: t('skills.bots'), text: t('skills.bots.text') },
+  { icon: 'web', title: t('skills.web'), text: t('skills.web.text') },
+] satisfies { icon: IconName; title: string; text: string }[];
+const help = [
+  { icon: 'rocket', title: t('help.turnkey'), text: t('help.turnkey.text') },
+  { icon: 'wrench', title: t('help.support'), text: t('help.support.text') },
+] satisfies { icon: IconName; title: string; text: string }[];
 ---
 
 <Base locale={locale}>
@@ -49,19 +56,27 @@ const help = { id: 'help', title: t('help.title') };
     </div>
   </section>
 
-  <section id={skills.id} class="relative z-10 scroll-mt-8 py-24 md:py-[120px]">
-    <div class="container-site text-center">
-      <h2 class="text-2xl font-bold md:text-h2">{skills.title}</h2>
-      <p class="mt-6 text-white/60">{t('placeholder.soon')}</p>
+  <section id="skills" class="relative z-10 scroll-mt-8 py-24 md:py-[120px]">
+    <div class="container-site">
+      <h2 class="text-center text-2xl font-bold md:text-h2">{t('skills.title')}</h2>
+      <ul class="mt-16 grid justify-items-center gap-16 md:mt-24 md:grid-cols-3 md:gap-10">
+        {skills.map((item) => (
+          <RoundIcon {...item} />
+        ))}
+      </ul>
     </div>
   </section>
 
   <ProjectsSection locale={locale} />
 
-  <section id={help.id} class="relative z-10 scroll-mt-8 py-24 md:py-[120px]">
-    <div class="container-site text-center">
-      <h2 class="text-2xl font-bold md:text-h2">{help.title}</h2>
-      <p class="mt-6 text-white/60">{t('placeholder.soon')}</p>
+  <section id="help" class="relative z-10 scroll-mt-8 py-24 md:py-[120px]">
+    <div class="container-site">
+      <h2 class="text-center text-2xl font-bold md:text-h2">{t('help.title')}</h2>
+      <ul class="mx-auto mt-16 grid max-w-[900px] justify-items-center gap-16 md:mt-24 md:grid-cols-2 md:gap-10">
+        {help.map((item) => (
+          <RoundIcon {...item} />
+        ))}
+      </ul>
     </div>
   </section>
 

@@ -15,8 +15,21 @@ export const en: Record<keyof typeof ru, string> = {
   'hero.projects': 'Projects',
   'hero.contact': 'Contact me',
   'skills.title': 'Skills',
+  'skills.ai': 'AI',
+  'skills.ai.text':
+    'Services and assistants powered by neural networks, from prototype to a working tool.',
+  'skills.bots': 'Telegram-bots',
+  'skills.bots.text':
+    'Bots and Mini Apps: requests, lists, notifications and payments right in Telegram.',
+  'skills.web': 'WebSites',
+  'skills.web.text': 'Websites, landing pages and PWAs that load fast and work well on phones.',
   'projects.title': 'Projects',
   'help.title': 'How I can help',
+  'help.turnkey': 'Turnkey development',
+  'help.turnkey.text':
+    'I take your idea, propose a solution, build it and launch it. You get a finished product.',
+  'help.support': 'Improvements and support',
+  'help.support.text': 'I dig into an existing project, fix bugs and add new features.',
   'contacts.title': 'Have an idea or a task?',
   'contacts.text': 'Message me on Telegram and we will discuss it.',
   'contacts.telegram': 'Message on Telegram',
@@ -30,7 +43,6 @@ export const en: Record<keyof typeof ru, string> = {
   'project.back': 'All projects',
   'project.next': 'Next project',
   'project.notTranslated': 'This project is only described in Russian for now.',
-  'placeholder.soon': 'This section is coming in the next stages.',
   'notFound.title': 'Page not found',
   'notFound.back': 'Back to home',
 };
