@@ -1,0 +1,29 @@
+---
+// Декоративная волна по мотивам макета: градиент wave-top → wave-mid → wave-deep → прозрачный.
+interface Props {
+  class?: string;
+  id: string;
+}
+
+const { class: className, id } = Astro.props;
+---
+
+<svg
+  class:list={['pointer-events-none absolute', className]}
+  viewBox="0 0 800 240"
+  fill="none"
+  aria-hidden="true"
+>
+  <defs>
+    <linearGradient id={id} x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" style="stop-color: var(--color-wave-top)"></stop>
+      <stop offset="0.45" style="stop-color: var(--color-wave-mid)"></stop>
+      <stop offset="0.8" style="stop-color: var(--color-wave-deep)"></stop>
+      <stop offset="1" style="stop-color: var(--color-wave-deep); stop-opacity: 0"></stop>
+    </linearGradient>
+  </defs>
+  <path
+    d="M0 0h800c-40 60-120 70-210 64-110-7-150 30-230 84C280 202 170 240 90 220 30 205 0 160 0 110z"
+    fill={`url(#${id})`}
+  ></path>
+</svg>

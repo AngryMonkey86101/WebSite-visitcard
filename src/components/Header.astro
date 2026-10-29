@@ -1,0 +1,75 @@
+---
+import { localizedUrl, pathWithoutLocale, useTranslations, type Locale } from '../i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const home = localizedUrl(locale);
+const otherLocale: Locale = locale === 'ru' ? 'en' : 'ru';
+const switchHref = localizedUrl(otherLocale, pathWithoutLocale(Astro.url.pathname));
+
+const links = [
+  { href: home, label: t('nav.home') },
+  { href: `${home}#skills`, label: t('nav.skills') },
+  { href: `${home}#projects`, label: t('nav.projects') },
+  { href: `${home}#contacts`, label: t('nav.contacts') },
+];
+---
+
+<header class="relative z-20">
+  <div class="container-site flex items-center justify-between gap-6 py-6 md:py-12">
+    <a
+      href={home}
+      class="font-display text-sm font-light tracking-[0.35em] text-accent uppercase md:text-base"
+    >
+      {t('hero.name')}
+    </a>
+
+    <nav aria-label={t('nav.menu')} class="hidden items-center gap-9 lg:flex">
+      {links.map((link) => (
+        <a href={link.href} class="font-display text-nav transition-colors hover:text-accent">
+          {link.label}
+        </a>
+      ))}
+      <a
+        href={switchHref}
+        hreflang={otherLocale}
+        aria-label={t('lang.switch')}
+        class="rounded-full border border-accent px-3 py-1 font-display text-sm font-semibold text-accent uppercase transition-colors hover:bg-accent hover:text-bg"
+      >
+        {otherLocale}
+      </a>
+    </nav>
+
+    <details class="group relative lg:hidden">
+      <summary
+        class="flex size-11 cursor-pointer list-none items-center justify-center rounded-full border border-accent text-accent [&::-webkit-details-marker]:hidden"
+        aria-label={t('nav.menu')}
+      >
+        <svg width="20" height="14" viewBox="0 0 20 14" fill="none" aria-hidden="true">
+          <path d="M0 1h20M0 7h20M0 13h20" stroke="currentColor" stroke-width="2"></path>
+        </svg>
+      </summary>
+      <nav
+        aria-label={t('nav.menu')}
+        class="absolute right-0 mt-3 flex min-w-48 flex-col gap-4 rounded-2xl border border-accent/40 bg-bg p-6 shadow-hover"
+      >
+        {links.map((link) => (
+          <a href={link.href} class="font-display text-lg hover:text-accent">
+            {link.label}
+          </a>
+        ))}
+        <a
+          href={switchHref}
+          hreflang={otherLocale}
+          class="font-display text-lg font-semibold text-accent uppercase"
+        >
+          {t('lang.switch')}
+        </a>
+      </nav>
+    </details>
+  </div>
+</header>
