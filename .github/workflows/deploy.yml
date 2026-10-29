@@ -1,0 +1,95 @@
+name: Build and deploy
+
+# Куда выкладывать, задаёт переменная репозитория DEPLOY_TARGET
+# (Settings → Secrets and variables → Actions → Variables):
+#   pages (по умолчанию) — GitHub Pages;
+#   vps — свой сервер по SSH, нужны секреты VPS_HOST, VPS_USER, VPS_SSH_KEY
+#         и переменные SITE_URL (https://ваш-домен) и VPS_PATH (по умолчанию /var/www/site).
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  DEPLOY_TARGET: ${{ vars.DEPLOY_TARGET || 'pages' }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+      - run: npm run format:check
+      - run: npm run lint
+      - run: npm run check
+
+      - name: Build
+        run: npm run build
+        env:
+          SITE_URL: ${{ env.DEPLOY_TARGET == 'vps' && vars.SITE_URL || format('https://{0}.github.io', github.repository_owner) }}
+          BASE_PATH: ${{ env.DEPLOY_TARGET == 'vps' && '/' || format('/{0}', github.event.repository.name) }}
+
+      - name: Upload artifact for Pages
+        if: env.DEPLOY_TARGET == 'pages'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+      - name: Upload artifact for VPS
+        if: env.DEPLOY_TARGET == 'vps'
+        uses: actions/upload-artifact@v4
+        with:
+          name: site
+          path: dist
+
+  deploy-pages:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && (vars.DEPLOY_TARGET || 'pages') == 'pages'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
+
+  deploy-vps:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && vars.DEPLOY_TARGET == 'vps'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: site
+          path: dist
+
+      - name: Upload to VPS
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+          VPS_PATH: ${{ vars.VPS_PATH || '/var/www/site' }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$VPS_SSH_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H "$VPS_HOST" >> ~/.ssh/known_hosts
+          rsync -az --delete dist/ "$VPS_USER@$VPS_HOST:$VPS_PATH/"

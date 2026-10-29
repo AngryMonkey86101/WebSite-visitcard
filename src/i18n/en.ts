@@ -1,0 +1,26 @@
+import type { ru } from './ru';
+
+export const en: Record<keyof typeof ru, string> = {
+  'site.title': 'Vadim Izmailov — developer',
+  'site.description': 'Portfolio of Vadim Izmailov: AI services, Telegram bots and websites.',
+  'nav.home': 'Home',
+  'nav.skills': 'Skills',
+  'nav.projects': 'Projects',
+  'nav.contacts': 'Contacts',
+  'nav.menu': 'Menu',
+  'lang.switch': 'Переключить на русский',
+  'hero.name': 'Vadim Izmailov',
+  'hero.role': 'Developer',
+  'hero.lead': 'I build AI services, Telegram bots and websites — from idea to launch.',
+  'hero.projects': 'Projects',
+  'hero.contact': 'Contact me',
+  'skills.title': 'Skills',
+  'projects.title': 'Projects',
+  'help.title': 'How I can help',
+  'contacts.title': 'Have an idea or a task?',
+  'contacts.text': 'Message me on Telegram and we will discuss it.',
+  'contacts.telegram': 'Message on Telegram',
+  'placeholder.soon': 'This section is coming in the next stages.',
+  'notFound.title': 'Page not found',
+  'notFound.back': 'Back to home',
+};

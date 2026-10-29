@@ -1,0 +1,69 @@
+@import '@fontsource-variable/inter';
+@import '@fontsource/source-sans-3/400.css';
+@import '@fontsource/source-sans-3/600.css';
+@import 'tailwindcss';
+
+/* Токены из design.md (макет «Landing page – Сканер», Frame 3). */
+@theme {
+  --color-bg: #000000;
+  --color-text: #ffffff;
+  --color-accent: #00c7fe;
+  --color-wave-top: #0088f0;
+  --color-wave-mid: #00479e;
+  --color-wave-deep: #000141;
+  --color-card: #ffffff;
+  --color-card-text: #000000;
+
+  --font-display: 'Inter Variable', 'Inter', system-ui, sans-serif;
+  --font-body: 'Source Sans 3', 'Source Sans Pro', system-ui, sans-serif;
+
+  --text-display: 4.5rem;
+  --text-display--line-height: 1.1;
+  --text-display-sub: 2.25rem;
+  --text-h2: 1.875rem;
+  --text-nav: 1.5rem;
+  --text-lead: 1.5rem;
+  --text-body: 1.125rem;
+  --text-body--line-height: 1.3;
+  --text-button: 1.125rem;
+
+  --container-site: 71.25rem;
+
+  --shadow-normal: 0 1px 5px #00000033, 0 3px 4px #0000001f, 0 2px 4px #00000024;
+  --shadow-hover: 0 3px 5px #46464633, 0 1px 18px #0000001f, 0 6px 10px #00000024;
+}
+
+@layer base {
+  html {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    scroll-behavior: smooth;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+  }
+}
+
+@utility container-site {
+  width: 100%;
+  max-width: var(--container-site);
+  margin-inline: auto;
+  padding-inline: 1rem;
+
+  @media (width >= 48rem) {
+    padding-inline: 2.5rem;
+  }
+
+  @media (width >= 80rem) {
+    padding-inline: 0;
+  }
+}
