@@ -5,14 +5,17 @@ import Tags from './Tags.astro';
 import { localizedUrl, useTranslations, type Locale } from '../i18n';
 import { getProjects } from '../lib/projects';
 
-// Блок проектов на главной: зигзаг как секция «ОПИСАНИЕ» в макете.
+// Избранные проекты (featured: true) зигзагом, как секция «ОПИСАНИЕ» в макете.
+// Если ни один не отмечен, показываем все.
 interface Props {
   locale: Locale;
 }
 
 const { locale } = Astro.props;
 const t = useTranslations(locale);
-const projects = await getProjects(locale);
+const all = await getProjects(locale);
+const featured = all.filter((p) => p.featured);
+const projects = featured.length > 0 ? featured : all;
 ---
 
 <section id="projects" class="relative z-10 scroll-mt-8 py-24 md:py-[120px]">

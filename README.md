@@ -51,6 +51,7 @@ deploy/         пример конфига nginx для своего VPS
    title: Название
    summary: Одно-два предложения для карточки (до 200 символов).
    order: 4                     # порядок на главной
+   featured: true               # показать крупно в блоке «Проекты»; в карусели «Все проекты» есть все
    tags: [AI, WebSites]
    stack: [Python, FastAPI]
    links:

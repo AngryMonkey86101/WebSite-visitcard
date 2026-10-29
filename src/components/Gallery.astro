@@ -1,0 +1,125 @@
+---
+import { useTranslations, type Locale } from '../i18n';
+
+// Просмотр скриншотов на весь экран. Без JS ссылки [data-gallery-item]
+// просто открывают картинку, с JS — этот диалог со стрелками, клавишами и свайпом.
+interface Props {
+  locale: Locale;
+}
+
+const t = useTranslations(Astro.props.locale);
+const button =
+  'flex size-[53px] items-center justify-center rounded-full border-2 border-accent bg-black/60 text-accent transition hover:bg-accent hover:text-bg';
+---
+
+<dialog
+  class="m-0 size-full max-h-none max-w-none bg-black p-0 text-white backdrop:bg-black/80"
+  aria-label={t('project.screenshots')}
+  data-gallery
+>
+  <div class="relative flex size-full items-center justify-center px-4 py-20 md:px-24">
+    <img class="max-h-full max-w-full rounded-xl object-contain shadow-hover" alt="" data-image />
+    <button
+      type="button"
+      class:list={[button, 'absolute top-4 right-4']}
+      aria-label={t('gallery.close')}
+      data-close
+    >
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 18 18"
+        stroke="currentColor"
+        stroke-width="2.5"
+        aria-hidden="true"
+      >
+        <path d="M2 2l14 14M16 2L2 16" />
+      </svg>
+    </button>
+    <button
+      type="button"
+      class:list={[
+        button,
+        'absolute bottom-4 left-4 md:top-1/2 md:bottom-auto md:-translate-y-1/2',
+      ]}
+      aria-label={t('gallery.prev')}
+      data-prev
+    >
+      <svg width="11" height="16" viewBox="0 0 11 16" fill="currentColor" aria-hidden="true">
+        <path d="M11 0L0 8l11 8z" />
+      </svg>
+    </button>
+    <button
+      type="button"
+      class:list={[
+        button,
+        'absolute right-4 bottom-4 md:top-1/2 md:bottom-auto md:-translate-y-1/2',
+      ]}
+      aria-label={t('gallery.next')}
+      data-next
+    >
+      <svg width="11" height="16" viewBox="0 0 11 16" fill="currentColor" aria-hidden="true">
+        <path d="M0 0l11 8-11 8z" />
+      </svg>
+    </button>
+    <p
+      class="absolute bottom-7 left-1/2 -translate-x-1/2 font-display text-sm text-white/70"
+      data-counter
+    ></p>
+  </div>
+</dialog>
+
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>('[data-gallery]');
+  const items = [...document.querySelectorAll<HTMLAnchorElement>('[data-gallery-item]')];
+
+  if (dialog && items.length > 0) {
+    const image = dialog.querySelector<HTMLImageElement>('[data-image]')!;
+    const counter = dialog.querySelector<HTMLElement>('[data-counter]')!;
+    const prev = dialog.querySelector<HTMLButtonElement>('[data-prev]')!;
+    const next = dialog.querySelector<HTMLButtonElement>('[data-next]')!;
+    let index = 0;
+
+    const show = (i: number) => {
+      index = (i + items.length) % items.length;
+      const item = items[index];
+      image.src = item.href;
+      image.alt = item.querySelector('img')?.alt ?? '';
+      counter.textContent = `${index + 1} / ${items.length}`;
+    };
+
+    prev.hidden = next.hidden = counter.hidden = items.length < 2;
+
+    items.forEach((item, i) =>
+      item.addEventListener('click', (event) => {
+        event.preventDefault();
+        show(i);
+        dialog.showModal();
+      }),
+    );
+
+    prev.addEventListener('click', () => show(index - 1));
+    next.addEventListener('click', () => show(index + 1));
+    dialog.querySelector('[data-close]')!.addEventListener('click', () => dialog.close());
+
+    // Клик по фону вокруг картинки закрывает просмотр.
+    dialog.addEventListener('click', (event) => {
+      const target = event.target as HTMLElement;
+      if (!target.closest('button, img')) dialog.close();
+    });
+
+    dialog.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft') show(index - 1);
+      if (event.key === 'ArrowRight') show(index + 1);
+    });
+
+    let startX = 0;
+    dialog.addEventListener('touchstart', (e) => (startX = e.touches[0].clientX), {
+      passive: true,
+    });
+    dialog.addEventListener('touchend', (e) => {
+      const dx = e.changedTouches[0].clientX - startX;
+      if (Math.abs(dx) > 50 && items.length > 1) show(index + (dx < 0 ? 1 : -1));
+    });
+  }
+</script>

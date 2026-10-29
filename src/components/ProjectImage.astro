@@ -10,14 +10,17 @@ interface Props {
   caption?: string;
   class?: string;
   eager?: boolean;
+  /** Без скругления и рамки — для обложки внутри карточки. */
+  flat?: boolean;
 }
 
-const { image, alt, label, caption, class: className, eager = false } = Astro.props;
+const { image, alt, label, caption, class: className, eager = false, flat = false } = Astro.props;
 ---
 
 <div
   class:list={[
-    'relative aspect-video w-full overflow-hidden rounded-2xl bg-bg shadow-normal ring-1 ring-white/10',
+    'relative aspect-video w-full overflow-hidden bg-bg',
+    !flat && 'rounded-2xl shadow-normal ring-1 ring-white/10',
     className,
   ]}
 >
@@ -31,7 +34,7 @@ const { image, alt, label, caption, class: className, eager = false } = Astro.pr
       class="size-full object-cover"
     />
   ) : (
-    <div class="flex size-full flex-col items-center justify-center gap-3 bg-[radial-gradient(ellipse_at_100%_0%,var(--color-wave-top)_0%,var(--color-wave-mid)_25%,var(--color-wave-deep)_50%,transparent_75%)] p-6 text-center">
+    <div class="flex size-full flex-col items-center justify-center gap-3 text-white bg-[radial-gradient(ellipse_at_100%_0%,var(--color-wave-top)_0%,var(--color-wave-mid)_25%,var(--color-wave-deep)_50%,transparent_75%)] p-6 text-center">
       <span class="font-display text-2xl font-light tracking-[0.25em] uppercase md:text-4xl">
         {label}
       </span>

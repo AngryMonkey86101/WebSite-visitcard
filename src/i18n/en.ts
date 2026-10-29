@@ -24,6 +24,11 @@ export const en: Record<keyof typeof ru, string> = {
   'skills.web': 'WebSites',
   'skills.web.text': 'Websites, landing pages and PWAs that load fast and work well on phones.',
   'projects.title': 'Projects',
+  'projects.all': 'All projects',
+  'projects.filter': 'Filter by tag',
+  'projects.filterAll': 'All',
+  'projects.prev': 'Previous projects',
+  'projects.next': 'Next projects',
   'help.title': 'How I can help',
   'help.turnkey': 'Turnkey development',
   'help.turnkey.text':
@@ -43,6 +48,10 @@ export const en: Record<keyof typeof ru, string> = {
   'project.back': 'All projects',
   'project.next': 'Next project',
   'project.notTranslated': 'This project is only described in Russian for now.',
+  'gallery.open': 'Open full screen',
+  'gallery.close': 'Close',
+  'gallery.prev': 'Previous screenshot',
+  'gallery.next': 'Next screenshot',
   'notFound.title': 'Page not found',
   'notFound.back': 'Back to home',
 };

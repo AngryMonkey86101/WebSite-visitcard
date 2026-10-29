@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import AllProjects from './AllProjects.astro';
 import Button from './Button.astro';
 import ProjectsSection from './ProjectsSection.astro';
 import RoundIcon, { type IconName } from './RoundIcon.astro';
@@ -68,6 +69,7 @@ const help = [
   </section>
 
   <ProjectsSection locale={locale} />
+  <AllProjects locale={locale} />
 
   <section id="help" class="relative z-10 scroll-mt-8 py-24 md:py-[120px]">
     <div class="container-site">
