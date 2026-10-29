@@ -9,6 +9,7 @@ export const en: Record<keyof typeof ru, string> = {
   'nav.contacts': 'Contacts',
   'nav.menu': 'Menu',
   'lang.switch': 'Переключить на русский',
+  'a11y.skip': 'Skip to content',
   'hero.name': 'Vadim Izmailov',
   'hero.role': 'Developer',
   'hero.lead': 'I build AI services, Telegram bots and websites — from idea to launch.',
