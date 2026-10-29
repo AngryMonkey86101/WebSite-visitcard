@@ -1,0 +1,125 @@
+---
+import ProjectImage from './ProjectImage.astro';
+import Tags from './Tags.astro';
+import { localizedUrl, useTranslations, type Locale } from '../i18n';
+import { getProjects } from '../lib/projects';
+
+// Карусель всех проектов с фильтром по тегам (блок «примеры_угроз» в макете).
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const projects = await getProjects(locale);
+const tags = [...new Set(projects.flatMap((p) => p.tags))];
+const chip =
+  'rounded-full border border-accent/60 px-5 py-2 font-display text-sm font-semibold text-accent transition hover:bg-accent/15 aria-pressed:bg-accent aria-pressed:text-white';
+const arrow =
+  'flex size-[53px] items-center justify-center rounded-full border-2 border-accent text-accent transition hover:bg-accent hover:text-bg disabled:pointer-events-none disabled:opacity-30';
+---
+
+<section id="all-projects" class="relative z-10 scroll-mt-8 py-24 md:py-[120px]" data-carousel>
+  <div class="container-site flex flex-col gap-10 md:gap-14">
+    <h2 class="text-center text-2xl font-bold md:text-h2">{t('projects.all')}</h2>
+
+    {tags.length > 1 && (
+      <div
+        class="flex flex-wrap justify-center gap-3"
+        role="group"
+        aria-label={t('projects.filter')}
+      >
+        <button type="button" class={chip} data-filter="" aria-pressed="true">
+          {t('projects.filterAll')}
+        </button>
+        {tags.map((tag) => (
+          <button type="button" class={chip} data-filter={tag} aria-pressed="false">
+            {tag}
+          </button>
+        ))}
+      </div>
+    )}
+
+    <ul
+      class="-my-4 flex justify-[safe_center] snap-x snap-mandatory gap-6 overflow-x-auto scroll-smooth py-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      data-track
+    >
+      {projects.map((project) => (
+        <li
+          class="w-[85%] shrink-0 snap-start sm:w-[340px] lg:w-[calc((100%-3rem)/3)]"
+          data-tags={project.tags.join('|')}
+        >
+          <a
+            href={localizedUrl(locale, `projects/${project.slug}/`)}
+            class="flex h-full flex-col overflow-hidden rounded-2xl bg-card text-card-text shadow-normal transition hover:-translate-y-1 hover:shadow-hover"
+          >
+            <ProjectImage image={project.cover} alt="" label={project.entry.data.title} flat />
+            <div class="flex grow flex-col gap-4 p-6">
+              <h3 class="text-xl font-bold">{project.entry.data.title}</h3>
+              <Tags tags={project.tags} tone="light" />
+              <p class="grow text-body text-black/80">{project.entry.data.summary}</p>
+              <span class="font-display text-sm font-bold text-[#0079a0] uppercase">
+                {t('project.more')} →
+              </span>
+            </div>
+          </a>
+        </li>
+      ))}
+    </ul>
+
+    <div class="flex justify-center gap-6" data-arrows hidden>
+      <button type="button" class={arrow} data-prev aria-label={t('projects.prev')}>
+        <svg width="11" height="16" viewBox="0 0 11 16" fill="currentColor" aria-hidden="true">
+          <path d="M11 0L0 8l11 8z" />
+        </svg>
+      </button>
+      <button type="button" class={arrow} data-next aria-label={t('projects.next')}>
+        <svg width="11" height="16" viewBox="0 0 11 16" fill="currentColor" aria-hidden="true">
+          <path d="M0 0l11 8-11 8z" />
+        </svg>
+      </button>
+    </div>
+  </div>
+</section>
+
+<script>
+  for (const root of document.querySelectorAll<HTMLElement>('[data-carousel]')) {
+    const track = root.querySelector<HTMLElement>('[data-track]')!;
+    const cards = [...track.querySelectorAll<HTMLElement>(':scope > li')];
+    const chips = [...root.querySelectorAll<HTMLButtonElement>('[data-filter]')];
+    const arrows = root.querySelector<HTMLElement>('[data-arrows]')!;
+    const prev = root.querySelector<HTMLButtonElement>('[data-prev]')!;
+    const next = root.querySelector<HTMLButtonElement>('[data-next]')!;
+
+    const update = () => {
+      const max = track.scrollWidth - track.clientWidth;
+      arrows.hidden = max <= 1;
+      prev.disabled = track.scrollLeft <= 1;
+      next.disabled = track.scrollLeft >= max - 1;
+    };
+
+    const step = () => {
+      const card = cards.find((c) => !c.hidden);
+      return card ? card.offsetWidth + parseFloat(getComputedStyle(track).columnGap) : 0;
+    };
+
+    prev.addEventListener('click', () => track.scrollBy({ left: -step() }));
+    next.addEventListener('click', () => track.scrollBy({ left: step() }));
+    track.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+
+    for (const chip of chips) {
+      chip.addEventListener('click', () => {
+        const tag = chip.dataset.filter;
+        for (const c of chips) c.setAttribute('aria-pressed', String(c === chip));
+        for (const card of cards) {
+          card.hidden = Boolean(tag) && !card.dataset.tags!.split('|').includes(tag!);
+        }
+        track.scrollTo({ left: 0, behavior: 'instant' });
+        update();
+      });
+    }
+
+    update();
+  }
+</script>

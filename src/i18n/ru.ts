@@ -21,6 +21,11 @@ export const ru = {
   'skills.web': 'WebSites',
   'skills.web.text': 'Сайты, лендинги и PWA, которые быстро грузятся и удобны на телефоне.',
   'projects.title': 'Проекты',
+  'projects.all': 'Все проекты',
+  'projects.filter': 'Фильтр по тегам',
+  'projects.filterAll': 'Все',
+  'projects.prev': 'Предыдущие проекты',
+  'projects.next': 'Следующие проекты',
   'help.title': 'Чем могу помочь',
   'help.turnkey': 'Разработка под ключ',
   'help.turnkey.text':
@@ -41,6 +46,10 @@ export const ru = {
   'project.back': 'Все проекты',
   'project.next': 'Следующий проект',
   'project.notTranslated': 'Описание этого проекта пока только на русском.',
+  'gallery.open': 'Открыть на весь экран',
+  'gallery.close': 'Закрыть',
+  'gallery.prev': 'Предыдущий скриншот',
+  'gallery.next': 'Следующий скриншот',
   'notFound.title': 'Страница не найдена',
   'notFound.back': 'На главную',
 } as const;

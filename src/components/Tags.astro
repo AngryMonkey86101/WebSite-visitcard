@@ -1,15 +1,22 @@
 ---
 interface Props {
   tags: string[];
+  /** light — для белых карточек карусели. */
+  tone?: 'dark' | 'light';
 }
 
-const { tags } = Astro.props;
+const { tags, tone = 'dark' } = Astro.props;
 ---
 
 {tags.length > 0 && (
   <ul class="flex flex-wrap gap-2">
     {tags.map((tag) => (
-      <li class="rounded-full border border-accent/60 px-3 py-1 font-display text-sm text-accent">
+      <li
+        class:list={[
+          'rounded-full border px-3 py-1 font-display text-sm',
+          tone === 'dark' ? 'border-accent/60 text-accent' : 'border-black/20 text-black/70',
+        ]}
+      >
         {tag}
       </li>
     ))}

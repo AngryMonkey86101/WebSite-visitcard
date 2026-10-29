@@ -1,6 +1,7 @@
 ---
 import { render } from 'astro:content';
 import Base from '../layouts/Base.astro';
+import Gallery from './Gallery.astro';
 import ProjectActions from './ProjectActions.astro';
 import ProjectImage from './ProjectImage.astro';
 import Tags from './Tags.astro';
@@ -69,7 +70,12 @@ const projectsHref = `${localizedUrl(locale)}#projects`;
         <div class="grid gap-6 md:grid-cols-2">
           {screenshots.map((shot, i) =>
             shot ? (
-              <a href={shot.src} target="_blank" rel="noopener" class="block">
+              <a
+                href={shot.src}
+                class="block cursor-zoom-in transition hover:-translate-y-1"
+                data-gallery-item
+                aria-label={`${t('gallery.open')}: ${title} — ${i + 1}`}
+              >
                 <ProjectImage image={shot} alt={`${title} — ${i + 1}`} label={title} />
               </a>
             ) : (
@@ -77,6 +83,7 @@ const projectsHref = `${localizedUrl(locale)}#projects`;
             ),
           )}
         </div>
+        {project.screenshots.length > 0 && <Gallery locale={locale} />}
       </section>
 
       <nav class="flex flex-wrap justify-between gap-6 border-t border-white/10 pt-8 font-display">
