@@ -1,0 +1,37 @@
+---
+import Button from './Button.astro';
+import { useTranslations, type Locale } from '../i18n';
+import type { Project } from '../lib/projects';
+
+// Кнопки проекта: «Открыть», «Открыть в Telegram», «Скачать» — только если есть ссылка.
+// Кнопку «Код» (links.repo) пока не показываем.
+interface Props {
+  project: Project;
+  locale: Locale;
+  moreHref?: string;
+}
+
+const { project, locale, moreHref } = Astro.props;
+const t = useTranslations(locale);
+const { demo, telegram, download } = project.links;
+const external = { target: '_blank', rel: 'noopener noreferrer' };
+---
+
+<div class="flex flex-wrap items-center gap-6 md:gap-10">
+  {moreHref && <Button href={moreHref}>{t('project.more')}</Button>}
+  {demo && (
+    <Button variant={moreHref ? 'secondary' : 'primary'} href={demo} {...external}>
+      {t('project.demo')}
+    </Button>
+  )}
+  {telegram && (
+    <Button variant={moreHref || demo ? 'secondary' : 'primary'} href={telegram} {...external}>
+      {t('project.telegram')}
+    </Button>
+  )}
+  {download && (
+    <Button variant="secondary" href={download} {...external}>
+      {t('project.download')}
+    </Button>
+  )}
+</div>

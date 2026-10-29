@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Button from './Button.astro';
+import ProjectsSection from './ProjectsSection.astro';
 import Wave from './Wave.astro';
 import { telegramUrl, useTranslations, type Locale } from '../i18n';
 
@@ -11,12 +12,9 @@ interface Props {
 const { locale } = Astro.props;
 const t = useTranslations(locale);
 
-// Разделы-заглушки: наполним на этапах 3–5 плана.
-const sections = [
-  { id: 'skills', title: t('skills.title') },
-  { id: 'projects', title: t('projects.title') },
-  { id: 'help', title: t('help.title') },
-] as const;
+// Разделы-заглушки: наполним на следующих этапах плана.
+const skills = { id: 'skills', title: t('skills.title') };
+const help = { id: 'help', title: t('help.title') };
 ---
 
 <Base locale={locale}>
@@ -51,14 +49,21 @@ const sections = [
     </div>
   </section>
 
-  {sections.map((section) => (
-    <section id={section.id} class="relative z-10 scroll-mt-8 py-24 md:py-[120px]">
-      <div class="container-site text-center">
-        <h2 class="text-2xl font-bold md:text-h2">{section.title}</h2>
-        <p class="mt-6 text-white/60">{t('placeholder.soon')}</p>
-      </div>
-    </section>
-  ))}
+  <section id={skills.id} class="relative z-10 scroll-mt-8 py-24 md:py-[120px]">
+    <div class="container-site text-center">
+      <h2 class="text-2xl font-bold md:text-h2">{skills.title}</h2>
+      <p class="mt-6 text-white/60">{t('placeholder.soon')}</p>
+    </div>
+  </section>
+
+  <ProjectsSection locale={locale} />
+
+  <section id={help.id} class="relative z-10 scroll-mt-8 py-24 md:py-[120px]">
+    <div class="container-site text-center">
+      <h2 class="text-2xl font-bold md:text-h2">{help.title}</h2>
+      <p class="mt-6 text-white/60">{t('placeholder.soon')}</p>
+    </div>
+  </section>
 
   <section id="contacts" class="relative z-10 scroll-mt-8 py-24 md:py-[120px]">
     <div class="container-site flex flex-col items-center gap-8 text-center">
